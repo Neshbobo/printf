@@ -1,61 +1,67 @@
-#include <stdarg.h>
-#include <stdio.h>
+#include "main.h"
+
+void print_buffer(char buffer[], int *buff_ind);
+
 /**
- * _printf - Custom implementation of printf.
- * @format: Format string containing directives.
- * @...: Variable number of arguments based on the format.
- *
- * This function produces output to stdout according to the given format string.
- * It handles the conversion specifiers 'c', 's', and '%'.
- * Note: This implementation does not handle flag characters, field width,
- * precision, or length modifiers.
- *
- * Returns: The number of characters printed (excluding the null byte used to end output to strings).
+ * _printf - Printf function
+ * @format: format.
+ * Return: Printed chars.
  */
-int _printf(const char *format, ...) {
-    va_list args;
-    int count = 0;
-va_start(args, format);
-while (*format != '\0') {
-        if (*format == '%') {
-            format++; // Move to the character after '%'
-            switch (*format) {
-                case 'c':
-                    // Print a character
-                    count += putchar(va_arg(args, int));
-                    break;
-                case 's': {
-                    // Print a string
-                    const char *str = va_arg(args, const char *);
-                    while (*str != '\0') {
-                        count += putchar(*str);
-                        str++;
-                    }
-                    break;
-                }
-                case '%':
-                    // Print a '%' character
-                    count += putchar('%');
-                    break;
-                default:
-                    // Unsupported conversion specifier, ignore
-                    break;
-            }
-        } else {
-            // Print regular characters
-            count += putchar(*format);
-        }
-format++; // Move to the next character in the format string
-    }
-va_end(args);
-return count;
+int _printf(const char *format, ...)
+{
+	int i, printed = 0, printed_chars = 0;
+	int flags, width, precision, size, buff_ind = 0;
+	va_list list;
+	char buffer[BUFF_SIZE];
+
+	if (format == NULL)
+		return (-1);
+
+	va_start(list, format);
+
+	for (i = 0; format && format[i] != '\0'; i++)
+	{
+		if (format[i] != '%')
+		{
+			buffer[buff_ind++] = format[i];
+			if (buff_ind == BUFF_SIZE)
+				print_buffer(buffer, &buff_ind);
+			/* write(1, &format[i], 1);*/
+			printed_chars++;
+		}
+		else
+		{
+			print_buffer(buffer, &buff_ind);
+			flags = get_flags(format, &i);
+			width = get_width(format, &i, list);
+			precision = get_precision(format, &i, list);
+			size = get_size(format, &i);
+			++i;
+			printed = handle_print(format, &i, list, buffer,
+				flags, width, precision, size);
+			if (printed == -1)
+				return (-1);
+			printed_chars += printed;
+		}
+	}
+
+	print_buffer(buffer, &buff_ind);
+
+	va_end(list);
+
+	return (printed_chars);
 }
-int main() {
-    // Example usage of _printf function
-    int num = 42;
-    const char *str = "World";
-int result = _printf("Hello, %c! My number is %d and I love %s%%.\n", 'A', num, str);
-printf("Number of characters printed: %d\n", result);
-return 0;
+
+/**
+ * print_buffer - Prints the contents of the buffer if it exist
+ * @buffer: Array of chars
+ * @buff_ind: Index at which to add next char, represents the length.
+ */
+void print_buffer(char buffer[], int *buff_ind)
+{
+	if (*buff_ind > 0)
+		write(1, &buffer[0], *buff_ind);
+
+	*buff_ind = 0;
 }
 
