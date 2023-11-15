@@ -1,37 +1,40 @@
 #include "main.h"
-
 /**
- * print_hex - prints an hexdecimal number.
- * @val: arguments.
- * Return: counter.
+ * print_exc_string - print exclusuives string.
+ * @val: parameter.
+ * Return: integer.
  */
-int print_hex(va_list val)
+
+int print_exc_string(va_list val)
 {
-	int i;
-	int *array;
-	int counter = 0;
-	unsigned int num = va_arg(val, unsigned int);
-	unsigned int tem = num;
+	char *s;
+	int i, length = 0;
+	int value;
 
-	while (num / 16 != 0)
+	s = va_arg(val, char *);
+	if (s == NULL)
+		s = "(null)";
+	for (i = 0; s[i] != '\0'; i++)
 	{
-		num /= 16;
-		counter++;
+		if (s[i] < 32 || s[i] >= 127)
+		{
+			_putchar('\\');
+			_putchar('x');
+			length = length + 2;
+			value = s[i];
+			if (value < 16)
+			{
+				_putchar('0');
+				length++;
+			}
+			length = length + print_HEX_extra(value);
+		}
+		else
+		{
+			_putchar(s[i]);
+			length++;
+		}
 	}
-	counter++;
-	array = malloc(counter * sizeof(int));
-
-	for (i = 0; i < counter; i++)
-	{
-		array[i] = tem % 16;
-		tem /= 16;
-	}
-	for (i = counter - 1; i >= 0; i--)
-	{
-		if (array[i] > 9)
-			array[i] = array[i] + 39;
-		_putchar(array[i] + '0');
-	}
-	free(array);
-	return (counter);
+	return (length);
 }
+

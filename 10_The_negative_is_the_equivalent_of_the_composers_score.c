@@ -1,31 +1,91 @@
 #include "main.h"
+/**
+ * print_i - prints integer
+ * @args: argument to print
+ * Return: integer
+ */
+int print_i(va_list args)
+{
+	int n = va_arg(args, int);
+	int num, last = n % 10, digit, exp = 1;
+	int  i = 1;
+
+	n = n / 10;
+	num = n;
+
+	if (last < 0)
+	{
+		_putchar('-');
+		num = -num;
+		n = -n;
+		last = -last;
+		i++;
+	}
+	if (num > 0)
+	{
+		while (num / 10 != 0)
+		{
+			exp = exp * 10;
+			num = num / 10;
+		}
+		num = n;
+		while (exp > 0)
+		{
+			digit = num / exp;
+			_putchar(digit + '0');
+			num = num - (digit * exp);
+			exp = exp / 10;
+			i++;
+		}
+	}
+	_putchar(last + '0');
+
+	return (i);
+}
 
 /**
- * print_pointer - prints an hexgecimal number.
- * @val: arguments.
- * Return: counter.
+ * print_d - prints decimal
+ * @args: argument to print
+ * Return: integer
  */
-int print_pointer(va_list val)
+
+int print_d(va_list args)
 {
-	void *p;
-	char *s = "(nil)";
-	long int x;
-	int y;
-	int i;
+	int n = va_arg(args, int);
+	int num, last = n % 10, digit;
+	int  i = 1;
+	int exp = 1;
 
-	p = va_arg(val, void*);
-	if (p == NULL)
+	n = n / 10;
+	num = n;
+
+	if (last < 0)
 	{
-		for (i = 0; s[i] != '\0'; i++)
-		{
-			_putchar(s[i]);
-		}
-		return (i);
+		_putchar('-');
+		num = -num;
+		n = -n;
+		last = -last;
+		i++;
 	}
+	if (num > 0)
+	{
+		while (num / 10 != 0)
+		{
+			exp = exp * 10;
+			num = num / 10;
+		}
+		num = n;
+		while (exp > 0)
+		{
+			digit = num / exp;
+			_putchar(digit + '0');
+			num = num - (digit * exp);
+			exp = exp / 10;
+			i++;
+		}
+	}
+	_putchar(last + '0');
 
-	x = (unsigned long int)p;
-	_putchar('0');
-	_putchar('x');
-	y = print_hex_extra(x);
-	return (y + 2);
+	return (i);
 }
+

@@ -1,24 +1,35 @@
 #include "main.h"
 
 /**
- * print_revs - function that prints a str in reverse
- * @args: type struct va_arg where is allocated printf arguments
- *
- * Return: the string
+ * print_oct - prints an octal number.
+ * @val: arguments.
+ * Return: counter.
  */
-int print_revs(va_list args)
+int print_oct(va_list val)
 {
-
-	char *s = va_arg(args, char*);
 	int i;
-	int j = 0;
+	int *array;
+	int counter = 0;
+	unsigned int num = va_arg(val, unsigned int);
+	unsigned int tem = num;
 
-	if (s == NULL)
-		s = "(null)";
-	while (s[j] != '\0')
-		j++;
-	for (i = j - 1; i >= 0; i--)
-		_putchar(s[i]);
-	return (j);
+	while (num / 8 != 0)
+	{
+		num /= 8;
+		counter++;
+	}
+	counter++;
+	array = malloc(counter * sizeof(int));
+
+	for (i = 0; i < counter; i++)
+	{
+		array[i] = tem % 8;
+		tem /= 8;
+	}
+	for (i = counter - 1; i >= 0; i--)
+	{
+		_putchar(array[i] + '0');
+	}
+	free(array);
+	return (counter);
 }
-
