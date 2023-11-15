@@ -1,87 +1,90 @@
 #include "main.h"
-
 /**
- * is_printable - Evaluates if a char is printable
- * @c: Char to be evaluated.
- *
- * Return: 1 if c is printable, 0 otherwise
+ * print_i - prints integer
+ * @args: argument to print
+ * Return: integer
  */
-int is_printable(char c)
+int print_i(va_list args)
 {
-	if (c >= 32 && c < 127)
-		return (1);
+	int n = va_arg(args, int);
+	int num, last = n % 10, digit, exp = 1;
+	int  i = 1;
 
-	return (0);
+	n = n / 10;
+	num = n;
+
+	if (last < 0)
+	{
+		_putchar('-');
+		num = -num;
+		n = -n;
+		last = -last;
+		i++;
+	}
+	if (num > 0)
+	{
+		while (num / 10 != 0)
+		{
+			exp = exp * 10;
+			num = num / 10;
+		}
+		num = n;
+		while (exp > 0)
+		{
+			digit = num / exp;
+			_putchar(digit + '0');
+			num = num - (digit * exp);
+			exp = exp / 10;
+			i++;
+		}
+	}
+	_putchar(last + '0');
+
+	return (i);
 }
 
 /**
- * append_hexa_code - Append ascci in hexadecimal code to buffer
- * @buffer: Array of chars.
- * @i: Index at which to start appending.
- * @ascii_code: ASSCI CODE.
- * Return: Always 3
+ * print_d - prints decimal
+ * @args: argument to print
+ * Return: integer
  */
-int append_hexa_code(char ascii_code, char buffer[], int i)
+
+int print_d(va_list args)
 {
-	char map_to[] = "0123456789ABCDEF";
-	/* The hexa format code is always 2 digits long */
-	if (ascii_code < 0)
-		ascii_code *= -1;
+	int n = va_arg(args, int);
+	int num, last = n % 10, digit;
+	int  i = 1;
+	int exp = 1;
 
-	buffer[i++] = '\\';
-	buffer[i++] = 'x';
+	n = n / 10;
+	num = n;
 
-	buffer[i++] = map_to[ascii_code / 16];
-	buffer[i] = map_to[ascii_code % 16];
+	if (last < 0)
+	{
+		_putchar('-');
+		num = -num;
+		n = -n;
+		last = -last;
+		i++;
+	}
+	if (num > 0)
+	{
+		while (num / 10 != 0)
+		{
+			exp = exp * 10;
+			num = num / 10;
+		}
+		num = n;
+		while (exp > 0)
+		{
+			digit = num / exp;
+			_putchar(digit + '0');
+			num = num - (digit * exp);
+			exp = exp / 10;
+			i++;
+		}
+	}
+	_putchar(last + '0');
 
-	return (3);
+	return (i);
 }
-
-/**
- * is_digit - Verifies if a char is a digit
- * @c: Char to be evaluated
- *
- * Return: 1 if c is a digit, 0 otherwise
- */
-int is_digit(char c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-
-	return (0);
-}
-
-/**
- * convert_size_number - Casts a number to the specified size
- * @num: Number to be casted.
- * @size: Number indicating the type to be casted.
- *
- * Return: Casted value of num
- */
-long int convert_size_number(long int num, int size)
-{
-	if (size == S_LONG)
-		return (num);
-	else if (size == S_SHORT)
-		return ((short)num);
-
-	return ((int)num);
-}
-
-/**
- * convert_size_unsgnd - Casts a number to the specified size
- * @num: Number to be casted
- * @size: Number indicating the type to be casted
- *
- * Return: Casted value of num
- */
-long int convert_size_unsgnd(unsigned long int num, int size)
-{
-	if (size == S_LONG)
-		return (num);
-	else if (size == S_SHORT)
-		return ((unsigned short)num);
-
-	return ((unsigned int)num);
-}
-

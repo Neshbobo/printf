@@ -1,36 +1,31 @@
 #include "main.h"
 
 /**
- * print_oct - prints an octal number.
+ * print_pointer - prints an hexgecimal number.
  * @val: arguments.
  * Return: counter.
  */
-int print_oct(va_list val)
+int print_pointer(va_list val)
 {
+	void *p;
+	char *s = "(nil)";
+	long int x;
+	int y;
 	int i;
-	int *array;
-	int counter = 0;
-	unsigned int num = va_arg(val, unsigned int);
-	unsigned int tem = num;
 
-	while (num / 8 != 0)
+	p = va_arg(val, void*);
+	if (p == NULL)
 	{
-		num /= 8;
-		counter++;
+		for (i = 0; s[i] != '\0'; i++)
+		{
+			_putchar(s[i]);
+		}
+		return (i);
 	}
-	counter++;
-	array = malloc(counter * sizeof(int));
 
-	for (i = 0; i < counter; i++)
-	{
-		array[i] = tem % 8;
-		tem /= 8;
-	}
-	for (i = counter - 1; i >= 0; i--)
-	{
-		_putchar(array[i] + '0');
-	}
-	free(array);
-	return (counter);
+	x = (unsigned long int)p;
+	_putchar('0');
+	_putchar('x');
+	y = print_hex_extra(x);
+	return (y + 2);
 }
-

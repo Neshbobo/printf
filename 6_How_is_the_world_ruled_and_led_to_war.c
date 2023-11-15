@@ -1,37 +1,37 @@
 #include "main.h"
 
 /**
- * get_width - Calculates the width for printing
- * @format: Formatted string in which to print the arguments.
- * @i: List of arguments to be printed.
- * @list: list of arguments.
- *
- * Return: width.
+ * print_hex - prints an hexdecimal number.
+ * @val: arguments.
+ * Return: counter.
  */
-int get_width(const char *format, int *i, va_list list)
+int print_hex(va_list val)
 {
-	int curr_i;
-	int width = 0;
+	int i;
+	int *array;
+	int counter = 0;
+	unsigned int num = va_arg(val, unsigned int);
+	unsigned int tem = num;
 
-	for (curr_i = *i + 1; format[curr_i] != '\0'; curr_i++)
+	while (num / 16 != 0)
 	{
-		if (is_digit(format[curr_i]))
-		{
-			width *= 10;
-			width += format[curr_i] - '0';
-		}
-		else if (format[curr_i] == '*')
-		{
-			curr_i++;
-			width = va_arg(list, int);
-			break;
-		}
-		else
-			break;
+		num /= 16;
+		counter++;
 	}
+	counter++;
+	array = malloc(counter * sizeof(int));
 
-	*i = curr_i - 1;
-
-	return (width);
+	for (i = 0; i < counter; i++)
+	{
+		array[i] = tem % 16;
+		tem /= 16;
+	}
+	for (i = counter - 1; i >= 0; i--)
+	{
+		if (array[i] > 9)
+			array[i] = array[i] + 39;
+		_putchar(array[i] + '0');
+	}
+	free(array);
+	return (counter);
 }
-

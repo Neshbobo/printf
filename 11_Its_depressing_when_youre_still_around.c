@@ -1,37 +1,37 @@
 #include "main.h"
-
 /**
- * print_hex_extra - prints an hexgecimal number.
- * @num: arguments.
- * Return: counter.
+ * print_rot13 - convert to rot13
+ * @args: printf arguments
+ * Return: counter
+ *
  */
-int print_hex_extra(unsigned long int num)
+int print_rot13(va_list args)
 {
-	long int i;
-	long int *array;
-	long int counter = 0;
-	unsigned long int temp = num;
+	int i, j, counter = 0;
+	int k = 0;
+	char *s = va_arg(args, char*);
+	char al[] = {"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"};
+	char bl[] = {"nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM"};
 
-	while (num / 16 != 0)
+	if (s == NULL)
+		s = "(null)";
+	for (i = 0; s[i]; i++)
 	{
-		num /= 16;
-		counter++;
+		k = 0;
+		for (j = 0; al[j] && !k; j++)
+		{
+			if (s[i] == al[j])
+			{
+				_putchar(bl[j]);
+				counter++;
+				k = 1;
+			}
+		}
+		if (!k)
+		{
+			_putchar(s[i]);
+			counter++;
+		}
 	}
-	counter++;
-	array = malloc(counter * sizeof(long int));
-
-	for (i = 0; i < counter; i++)
-	{
-		array[i] = temp % 16;
-		temp = temp / 16;
-	}
-	for (i = counter - 1; i >= 0; i--)
-	{
-		if (array[i] > 9)
-			array[i] = array[i] + 39;
-		_putchar(array[i] + '0');
-	}
-	free(array);
 	return (counter);
 }
-

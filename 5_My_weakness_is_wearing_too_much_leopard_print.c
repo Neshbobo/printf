@@ -1,27 +1,40 @@
 #include "main.h"
-
 /**
- * get_size - Calculates the size to cast the argument
- * @format: Formatted string in which to print the arguments
- * @i: List of arguments to be printed.
- *
- * Return: Precision.
+ * print_exc_string - print exclusuives string.
+ * @val: parameter.
+ * Return: integer.
  */
-int get_size(const char *format, int *i)
+
+int print_exc_string(va_list val)
 {
-	int curr_i = *i + 1;
-	int size = 0;
+	char *s;
+	int i, length = 0;
+	int value;
 
-	if (format[curr_i] == 'l')
-		size = S_LONG;
-	else if (format[curr_i] == 'h')
-		size = S_SHORT;
-
-	if (size == 0)
-		*i = curr_i - 1;
-	else
-		*i = curr_i;
-
-	return (size);
+	s = va_arg(val, char *);
+	if (s == NULL)
+		s = "(null)";
+	for (i = 0; s[i] != '\0'; i++)
+	{
+		if (s[i] < 32 || s[i] >= 127)
+		{
+			_putchar('\\');
+			_putchar('x');
+			length = length + 2;
+			value = s[i];
+			if (value < 16)
+			{
+				_putchar('0');
+				length++;
+			}
+			length = length + print_HEX_extra(value);
+		}
+		else
+		{
+			_putchar(s[i]);
+			length++;
+		}
+	}
+	return (length);
 }
 
