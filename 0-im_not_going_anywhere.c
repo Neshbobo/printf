@@ -1,48 +1,68 @@
 #include "main.h"
+#include <stdarg.h>
+#include <unistd.h>
 
 /**
-* _printf - Prints formatted output to the standard output stream (stdout)
+* _printf - Custom printf function supporting %c, %s, and %%
+* @format: The format string containing directives
 *
-* @param format: The format string containing directives specifying the output format
-* @param ...: Variadic arguments to be formatted and printed
+* Return: The number of characters printed (excluding the null byte)
 *
-* @return: The number of characters printed (excluding the null byte)
+* Author: Neema and Yatich
 */
 int _printf(const char *format, ...)
 {
-int num_printed = 0;
-va_list arguments;
-va_start(arguments, format);
+va_list args;
+int count = 0;
+
+va_start(args, format);
 
 while (*format)
 {
-if (*format == '%')
+if (*format == '%' && *(format + 1) != '\0')
 {
-switch (*++format)
+format++; /* Move past the % character */
+
+switch (*format)
 {
 case 'c':
-num_printed += _putchar(va_arg(arguments, int));
+count += write(1, &va_arg(args, int), 1);
 break;
+
 case 's':
-num_printed += _puts(va_arg(arguments, const char *));
+count += write(1, va_arg(args, char *), 1);
 break;
+
 case '%':
-num_printed += _putchar('%');
+count += write(1, "%", 1);
 break;
+
 default:
-// Invalid format specifier, skip it
+count += write(1, "%", 1);
+count += write(1, format, 1);
 break;
 }
 }
 else
 {
-num_printed += _putchar(*format);
+count += write(1, format, 1);
 }
 
 format++;
 }
 
-va_end(arguments);
+va_end(args);
 
- return (num_printed);
+return (count);
+}
+
+/**
+* main - Example usage of _printf
+*
+* Return: Always 0
+*/
+int main(void)
+{
+_printf("Hello, %c! This is a %s example. The value of 10%% is %d.\n", 'W', "printf", 10);
+return (0);
 }
