@@ -17,39 +17,14 @@ int _printf(const char *format, ...)
 
     while (*format)
     {
-        if (*format == '%' && *(format + 1) != '\0')
+        if (*format == '%' && (*(format + 1) == 'd' || *(format + 1) == 'i'))
         {
             format++; /* Move past the % character */
-
-            switch (*format)
-            {
-                case 'c':
-                    count += write(1, &va_arg(args, int), 1);
-                    break;
-
-                case 's':
-                    count += write(1, va_arg(args, char *), 1);
-                    break;
-
-                case 'd':
-                case 'i':
-                    {
-                        int num = va_arg(args, int);
-                        char buffer[12]; /* Assumes a 32-bit integer max length */
-                        int length = sprintf(buffer, "%d", num);
-                        count += write(1, buffer, length);
-                    }
-                    break;
-
-                case '%':
-                    count += write(1, "%", 1);
-                    break;
-
-                default:
-                    count += write(1, "%", 1);
-                    count += write(1, format, 1);
-                    break;
-            }
+            
+            int num = va_arg(args, int);
+            char buffer[12]; /* Assumes a 32-bit integer max length */
+            int length = sprintf(buffer, "%d", num);
+            count += write(1, buffer, length);
         }
         else
         {
@@ -71,6 +46,6 @@ int _printf(const char *format, ...)
  */
 int main(void)
 {
-    _printf("Hello, %c! This is a %s example. The value of %d is %i.\n", 'W', "printf", 10, -20);
+    _printf("This is an example with %d and %i.\n", 42, -23);
     return (0);
 }
