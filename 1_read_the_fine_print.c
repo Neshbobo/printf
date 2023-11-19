@@ -16,7 +16,7 @@ int _printf(const char *format, ...)
   va_start(args, format);
   while (*format != '\0') 
   {
-    if (*format == '%')
+    if (*format == '%') 
     {
       switch (*++format) 
       {
@@ -26,6 +26,10 @@ int _printf(const char *format, ...)
         case 's':
           num_chars_printed += fputs(va_arg(args, char *), stdout);
           break;
+        case 'd':
+        case 'i':
+          num_chars_printed += fprintf(stdout, "%d", va_arg(args, int));
+          break;
         case '%':
           num_chars_printed += putchar('%');
           break;
@@ -33,7 +37,7 @@ int _printf(const char *format, ...)
           fprintf(stderr, "Invalid format specifier: %%%c\n", *format);
           return (-1);
       }
-    }
+    } 
     else 
     {
       num_chars_printed += putchar(*format);
