@@ -8,44 +8,41 @@
  *
  * Return: The number of characters printed (excluding the null byte)
  */
-int _printf(const char *format, ...)
+int _printf(const char *format, ...) 
 {
-    va_list args;
-    int count = 0;
+  va_list args;
+  int num_chars_printed = 0;
 
-    va_start(args, format);
-
-    while (*format)
+  va_start(args, format);
+  while (*format != '\0') 
+  {
+    if (*format == '%')
     {
-        if (*format == '%' && (*(format + 1) == 'd' || *(format + 1) == 'i'))
-        {
-            format++; /* Move past the % character */
-            
-            int num = va_arg(args, int);
-            char buffer[12]; /* Assumes a 32-bit integer max length */
-            int length = sprintf(buffer, "%d", num);
-            count += write(1, buffer, length);
-        }
-        else
-        {
-            count += write(1, format, 1);
-        }
-
-        format++;
+      switch (*++format) 
+      {
+        case 'c':
+          num_chars_printed += putchar(va_arg(args, int));
+          break;
+        case 's':
+          num_chars_printed += fputs(va_arg(args, char *), stdout);
+          break;
+        case '%':
+          num_chars_printed += putchar('%');
+          break;
+        default:
+          fprintf(stderr, "Invalid format specifier: %%%c\n", *format);
+          return (-1);
+      }
+    }
+    else 
+    {
+      num_chars_printed += putchar(*format);
     }
 
-    va_end(args);
+    ++format;
+  }
 
-    return (count);
-}
+  va_end(args);
 
-/**
- * main - Example usage of _printf
- *
- * Return: Always 0
- */
-int main(void)
-{
-    _printf("This is an example with %d and %i.\n", 42, -23);
-    return (0);
+  return (num_chars_printed);
 }
