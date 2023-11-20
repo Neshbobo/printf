@@ -8,7 +8,7 @@
  *
  * Return: The number of characters printed (excluding the null byte)
  */
-int _printf(const char *format, ...) 
+int _cv(const char *format, ...) 
 {
   va_list args;
   int num_chars_printed = 0;
