@@ -53,7 +53,7 @@ int _printf(const char *format, ...)
  *
  * Return: Always 0
  */
-int main(void)
+
 {
     unsigned int value = 42;
     _printf("Binary representation: %b\n", value);
